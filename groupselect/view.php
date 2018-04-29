@@ -35,6 +35,9 @@ $id = optional_param( 'id', 0, PARAM_INT ); // Course Module ID, or
 $g = optional_param( 'g', 0, PARAM_INT ); // Page instance ID
 $select = optional_param( 'select', 0, PARAM_INT );
 $addstudent = optional_param( 'addstudent', 0, PARAM_INT );
+$invite = optional_param( 'invite', 0, PARAM_INT );
+$group_name = optional_param( 'group_name', 0, PARAM_TEXT);
+$group_description = optional_param( 'group_description', 0, PARAM_TEXT );
 $unselect = optional_param( 'unselect', 0, PARAM_INT );
 $confirm = optional_param( 'confirm', 0, PARAM_BOOL );
 $create = optional_param( 'create', 0, PARAM_BOOL );
@@ -124,8 +127,8 @@ $cancreate = ($groupselect->studentcancreate and has_capability( 'mod/groupselec
 $canexport = (has_capability( 'mod/groupselect:export', $context ) and count( $groups ) > 0);
 $canassign = (has_capability( 'mod/groupselect:assign', $context ) and $groupselect->assignteachers
             and (count(groupselect_get_context_members_by_role( context_course::instance( $course->id )->id, $assignrole )) > 0));
-$canaddstudent = (has_capability( 'mod/groupselect:addstudent', $context ));
-
+$caninvite = (has_capability( 'mod/groupselect:invite', $context ));
+$canseeinvitations = (has_capability( 'mod/groupselect:invitationpage', $context ));
 $canunassign = (has_capability( 'mod/groupselect:assign', $context ) and $alreadyassigned);
 $canedit = ($groupselect->studentcansetdesc and $isopen);
 $canmanagegroups = has_capability('moodle/course:managegroups', $context);
@@ -241,7 +244,7 @@ if ($cancreate and $isopen) {
 }
 
 // Add Selected Student To The Group.
-if ($addstudent and $canassign and isset( $groups[$addstudent] ) and $isopen) {
+if ($addstudent and $canseeinvitations and isset( $groups[$addstudent] ) and $isopen) {
     
     $grpname = format_string( $groups[$addstudent]->name, true, array (
             'context' => $context
@@ -253,12 +256,42 @@ if ($addstudent and $canassign and isset( $groups[$addstudent] ) and $isopen) {
         $problems[] = get_string( 'cannotselectmaxed', 'mod_groupselect', $grpname );
     } else{
         if(isset($_POST['select1'])){
-        $textarea1 = $_POST['select1'];
+        $studentid = $_POST['select1'];
         }
-        groups_add_member( $addstudent,$textarea1);
+        groups_add_member( $addstudent,$studentid);
         redirect ( $PAGE->url );
         }
-    } 
+} 
+// Invite Selected Teacher To Supervise The Group.
+if ($invite and $caninvite and isset( $groups[$invite] )) {
+    
+        if(isset($_POST['select2'])){
+        $teacherid = $_POST['select2'];
+        }
+        
+        $check = $DB->count_records('groupselect_invitations',
+                array('group_id'=>$invite,'from_id'=>$USER->id,'to_id'=>$teacherid));
+                
+        if($check >=1){
+            
+          echo '<script type="text/javascript">alert("You Already Sent An Invitation To This Teacher!");</script>';
+          
+          
+        }else{
+
+             $newinvitation = ( object ) array (
+                         'from_id' => $USER->id,
+                         'to_id' => $teacherid,
+                         'instance_id' => $groupselect->id,
+                         'group_id' => $invite,
+                         'group_name'=> $group_name,
+                         'group_description'=>$group_description
+                 );
+             $DB->insert_record( 'groupselect_invitations', $newinvitation );
+              echo '<script type="text/javascript">alert("Invitation Sent Successfully");</script>';
+        }
+       
+} 
     
 // Student Join group self-selection.
 if ($select and $canselect and isset( $groups[$select] ) and $isopen) {
@@ -567,7 +600,12 @@ if ($assign and $canassign) {
 
 // *** PAGE OUTPUT ***
 echo $OUTPUT->header();
-echo("<button onclick=\"location.href='UserHelper.php'\">User Helper</button>");
+echo $OUTPUT->single_button( new moodle_url( '/mod/groupselect/UserHelper.php'),'User Helper');
+if($canseeinvitations){
+    $count_invitations = $DB->count_records('groupselect_invitations', array('to_id'=>$USER->id));
+echo $OUTPUT->single_button( new moodle_url( '/mod/groupselect/invitations.php'),'Invitations ('.$count_invitations.')');
+}
+
 echo $OUTPUT->heading( format_string( $groupselect->name, true, array (
         'context' => $context
 ) ) );
@@ -816,14 +854,27 @@ if (empty ( $groups )) {
         
         // Action buttons.
         if ($isopen) {
-              if ($canassign) {
+            if ($canseeinvitations) {
                 $line[6] = get_students($group->id);
                 $line[7] = $OUTPUT->single_button( new moodle_url( '/mod/groupselect/view.php', array (
                         'id' => $cm->id,
                         'addstudent' => $group->id,
                 ) ), get_string( 'addstudent', 'mod_groupselect', ""));
                 $actionpresent = true;
-            } 
+            }
+            if($ismember and $caninvite){
+                $check = $DB->count_records('groupselect_groups_teachers', array('groupid'=>$group->id));
+                if($check == 0){
+                $line[6] = get_teachers();
+                $line[7] = $OUTPUT->single_button( new moodle_url( '/mod/groupselect/view.php', array (
+                        'invite' => $group->id,
+                        'group_name'=> $group->name,
+                        'group_description'=>$group->description
+                ) ), get_string( 'invite', 'mod_groupselect', ""));
+                $actionpresent = true;
+                }
+                
+            }
             if (! $ismember and $canselect and $groupselect->maxmembers and $groupselect->maxmembers <= $usercount) {
                 $line[5] = '<div class="maxlimitreached">' . get_string( 'maxlimitreached', 'mod_groupselect' ) . '</div>'; // full - no more members
                 $actionpresent = true;
@@ -848,6 +899,8 @@ if (empty ( $groups )) {
                 
             } else {
                 $line[5] = '';
+                $line[6]='';
+                $line[7]='';
             }
         }
         if (!$ismember) {
@@ -868,7 +921,7 @@ if (empty ( $groups )) {
             $strgroupdesc,
             $strcount,
             $strmembers,
-            ''
+            '',
     );
     if ($actionpresent) {
         array_push($table->head, $straction);

@@ -87,6 +87,37 @@ function get_students($groupid){
                 return $select;
 }
 
+function get_student_name($userid){
+       global $DB;
+       $query = "SELECT firstname,lastname FROM {user} WHERE id = ?";
+              
+              $name = $DB->get_record_sql($query,array($userid));
+              $fullname = $name->firstname;
+              $fullname.=' '.$name->lastname;
+              return $fullname;
+}
+function get_my_invitations($userid){
+       global $DB;
+       $query = "SELECT * FROM {groupselect_invitations} WHERE to_id = ?";
+              
+              $invitations = $DB->get_records_sql($query,array($userid));
+              return $invitations;
+}
+
+function get_teachers(){
+       global $DB;
+       $query = "SELECT x.id, CONCAT(x.firstname, ' ', x.lastname) as fullname FROM {user} x JOIN {role_assignments} y ON y.userid = x.id WHERE y.roleid = ? OR y.roleid = ?";
+              
+              $users = $DB->get_records_sql($query,array('4','3'));
+              $select= "<form style='margin-top:5px;margin-left:-45px;' method='post'><select name='select2' >";
+              $select.= '  <option value="" selected disabled hidden>Select Teacher</option>';
+                foreach($users as $user)
+                {
+                     $select.='<option value="'.$user->id.'">'.$user->fullname.'</option>';
+                    
+                }
+                return $select;
+}
 
 function groupselect_group_member_counts($cm, $targetgrouping=0) {
     global $DB;

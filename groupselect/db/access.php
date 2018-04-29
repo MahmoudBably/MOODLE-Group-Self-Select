@@ -79,16 +79,24 @@ $capabilities = array(
                         'editingteacher' => CAP_ALLOW
                 )
         ),
-        'mod/groupselect:addstudent' => array(
-                    'riskbitmask' => RISK_PERSONAL,
-                        'captype' => 'write',
-                    'contextlevel' => CONTEXT_MODULE,
-                    'archetypes' => array(
-                            'teacher' => CAP_ALLOW,
-                            'editingteacher' => CAP_ALLOW,
-                            'manager' => CAP_ALLOW
+
+        'mod/groupselect:invite' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_MODULE,
+                'archetypes' => array(
+                        'student' => CAP_ALLOW
                 )
         ),
+
+        'mod/groupselect:invitationpage' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_MODULE,
+                'archetypes' => array(
+                        'editingteacher' => CAP_ALLOW,
+                        'teacher' => CAP_ALLOW
+                )
+        ),
+    
         'mod/groupselect:assign' => array(
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_MODULE,

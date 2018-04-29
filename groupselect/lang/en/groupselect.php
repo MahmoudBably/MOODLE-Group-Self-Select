@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $string['action'] = 'Action';
+$string['accept'] = 'Accept {$a}';
 $string['assignedteacher'] = 'Supervisor';
 $string['assigngroup'] = 'Assign supervisors to groups';
 $string['assigngroup_help'] = 'If set, enables a button which assigns supervisors to groups (if course has supervisors). Assigned supervisors are not group members, but they show up in export file and in the main view (if set). Useful if course uses assistants to handle groups. This permission can be set further in the role capabilities.';
@@ -59,6 +60,7 @@ $string['groupselect:unselect'] = 'Allow leaving of group';
 $string['hidefullgroups'] = 'Hide full groups from the main view';
 $string['hidefullgroups_help'] = 'If set, hides all groups, which have reached max member count, from the main list view (excluding user\'s own group). May be useful if the activity has lots of groups.';
 $string['incorrectpassword'] = 'Incorrect password';
+$string['invite'] = 'Invite {$a}';
 $string['managegroups'] = 'Manage groups';
 $string['maxcharlenreached'] = 'Maximum character number reached';
 $string['maxgroupmembership'] = 'Maximum number of groups to participate in';
@@ -94,6 +96,7 @@ $string['ok'] = 'OK';
 $string['password'] = 'Requires password';
 $string['pluginadministration'] = 'Module administration';
 $string['pluginname'] = 'Group self-selection';
+$string['reject'] = 'Reject {$a}';
 $string['removeallsupervisors'] = 'Remove group supervisors';
 $string['saving'] = 'Saving...';
 $string['select'] = 'Become member of {$a}';

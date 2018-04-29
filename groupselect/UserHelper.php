@@ -1,31 +1,14 @@
 <?php
- echo'<HTML>
 
-<HEAD>
+require('../../config.php');
+$PAGE->set_context(get_system_context());
+$PAGE->set_title("User Helper");
+$PAGE->set_heading("Group Self-Select User Helper");
+$PAGE->set_url( '/mod/groupselect/UserHelper.php');
+echo $OUTPUT->header();
 
-    <TITLE>User Helper</TITLE>
+echo'<HTML> 
 
-</HEAD>
-
-<BODY BGCOLOR="#FFFFFF">
-
-
-
-   
-    
-
-    <center><font size="6"><H1>Group Self-Selection User Helper</H1><img src="../groupselect/UserHelper/Logo.png" alt="Icon" height="50" width="80" style="margin-top:-105px;margin-right:-1020px"></font></center>
-
-
-    <br />
-    <br />
-    <br />
-    <br />
-    <br /> 
-    <h2>
-<a href="http://localhost/course">Back to courses</a>
-    </form></h2>
-    <hr />
     <style>
         div.box {
             background-color: #F8F8F8;
@@ -38,11 +21,13 @@
     <h2>This section will cover the following Topics:</h2>
     <div class="box">
         <center>a)Create a group self-select activity.</center><br /><br />
-        
         <center>b)Create a group.</center><br /><br />
         <center>c)Assign a Supervisor.</center><br /><br />
         <center>d)Export group data file (CSV).</center><br /><br />
-        <center>e)Add Students to groups.</center>
+        <center>e)Add Students to groups.</center> <br /><br />
+        <center>f)Supervision Invitations.</center>
+
+
     </div>
 
     <br /><br /><br /><br /><br />
@@ -203,7 +188,7 @@
     <br />
     2)Supervisors are assigned to corresponding groups randomly.<br />
     <br />
-    <CENTER><img src="../groupselect/UserHelper/Assign Supervisor/2.png" height="500" width="900"></CENTER>    <br />
+    <CENTER><img src="../groupselect/UserHelper/Assign Supervisor/2.png" height="500" width="900"></CENTER>
     <br />
     <br />
     <br />
@@ -237,7 +222,8 @@
     3)The file is downloaded successfully. When it is opened using Excel Sheet, it is shown as the following picture.
     <br />
     <br />
-    <CENTER><img src="../groupselect/UserHelper/CSV Export/3.png" height="500" width="900"></CENTER>    <br />
+    <CENTER><img src="../groupselect/UserHelper/CSV Export/3.png" height="500" width="900"></CENTER>    
+    <br />
     <br />
     <br />
     <br />
@@ -273,6 +259,37 @@
     <br />
     <br />
     <br />
+    
+     <h2>f)Supervision Invitations:</h2>
+
+    1)Click on "Invitations" Button.<br /><br />
+    <CENTER><img src="../groupselect/UserHelper/Invitations/1.png" height="500" width="900"></CENTER>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    2)You can Accept or Reject an invitation through the two buttons. Click "Accept".<br />
+    <br />
+    <CENTER><img src="../groupselect/UserHelper/Invitations/2.png" height="500" width="900"></CENTER>    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    3)You are now the supervisor of the group.
+    <br />
+    <br />
+    <CENTER><img src="../groupselect/UserHelper/Invitations/3.png" height="500" width="900"></CENTER>
+    <br />
+    <br />
+    <br />
+    <br />
     <br />
     <br />
     <br />
@@ -282,7 +299,8 @@
     <h2>This section will cover the following Topics</h2>
     <div class="box">
        <center> a)Create a group.</center><br /><br />
-       <center> b)Join a group.<center>
+       <center> b)Join a group.<center> <br /><br />
+       <center> c)Invite a teacher to supervise your group.<center>
 
     </div>
     <br /><br /><br /><br /><br />
@@ -335,17 +353,21 @@
     <br />
     <br />
     <CENTER><img src="../groupselect/UserHelper/Student Join Group/2.png" height="500" width="900"></CENTER>    <br />
+    
+    <h2> c)Invite a teacher to supervise your group.</h2>
+    </br>
+    </br>
+    1)Select a teacher from the list then click on "Invite" button.
+    <br />
+    <br />
+    <CENTER><img src="../groupselect/UserHelper/Invite Teacher/1.png" height="500" width="900"></CENTER>    <br />
+    
     <br />
     <br />
     <br />
     <br />
     <hr />
 
-
-
-
-
-</BODY>
-
-
 </HTML>';
+
+echo $OUTPUT->footer();
